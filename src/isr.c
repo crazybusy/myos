@@ -4,14 +4,11 @@
 // Rewritten for JamesM's kernel development tutorials.
 //
 
-#include <common.h>
 #include <tty.h>
 #include <isr.h>
 
 // This gets called from our ASM interrupt handler stub.
 void isr_handler(registers_t regs)
-{
-   terminal_write_string("recieved interrupt: ");
-   //terminal_write_string(tostring(regs.int_no));
-   terminal_write_string("\n");
+{		
+	terminal_write_string(":interrupt:");      
 }

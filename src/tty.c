@@ -66,15 +66,20 @@ void terminal_putchar(char c)
 	switch(c){
 		case '\n':
 			terminal_column = 0;
-			if (++terminal_row == VGA_HEIGHT)
+			if (++terminal_row == VGA_HEIGHT){
 				terminal_scroll();
+				terminal_row--;
+			}
 			break;
 		default:
 		terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
 			if (++terminal_column == VGA_WIDTH) {
 				terminal_column = 0;
 				if (++terminal_row == VGA_HEIGHT)
+				{
 					terminal_scroll();
+					terminal_row--;
+				}
 			}
 	}
 }

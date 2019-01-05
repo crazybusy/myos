@@ -1,43 +1,25 @@
-/* The bootloader will look at this image and start execution at the symbol
-   designated as the entry point. */
+OUTPUT_FORMAT("binary")
 ENTRY(start)
- 
-/* Tell where the various sections of the object files will be put in the final
-   kernel image. */
+phys = 0x00100000;
 SECTIONS
 {
-	/* Begin putting sections at 1 MiB, a conventional place for kernels to be
-	   loaded at by the bootloader. */
-	. = 1M;
- 
-	/* First put the multiboot header, as it is required to be put very early
-	   early in the image or the bootloader won't recognize the file format.
-	   Next we'll put the .text section. */
-	.text BLOCK(4K) : ALIGN(4K)
-	{
-    	code = .; _code = .; __code = .;
-		*(.multiboot)
-		*(.text)
-		*(.rodata)
-	}
-	/* Read-write data (initialized) */
-	.data BLOCK(4K) : ALIGN(4K)
-	{
-		data = .; _data = .; __data = .;
-		*(.data)
-	}
- 
-	/* Read-write data (uninitialized) and stack */
-	.bss BLOCK(4K) : ALIGN(4K)
-	{
-		bss = .; _bss = .; __bss = .;
-		*(COMMON)
-		*(.bss)
-		*(.stack)
-	}
- 
-	/* The compiler may produce other sections, by default it will put them in
-	   a segment with the same name. Simply add stuff here as needed. */
-	end = .; _end = .; __end = .;
-
+  .text phys : AT(phys) {
+    code = .;
+    *(.text)
+    *(.rodata)
+    . = ALIGN(4096);
+  }
+  .data : AT(phys + (data - code))
+  {
+    data = .;
+    *(.data)
+    . = ALIGN(4096);
+  }
+  .bss : AT(phys + (bss - code))
+  {
+    bss = .;
+    *(.bss)
+    . = ALIGN(4096);
+  }
+  end = .;
 }
