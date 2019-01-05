@@ -1,0 +1,3 @@
+wget http://newos.org/toolchains/i686-elf-4.9.1-Linux-x86_64.tar.xz
+wget http://newos.org/toolchains/x86_64-elf-4.9.1-Linux-x86_64.tar.xz
+wget https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/x86_64-gcc-8.1.0-nolibc-i386-linux.tar.xz
