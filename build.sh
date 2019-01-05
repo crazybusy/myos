@@ -13,7 +13,7 @@ LINKER_PARAMS="-ffreestanding -O2 -nostdlib"
 
 
 $ASSEMBLER ./src/boot.s -o ./build/boot.o
-#$ASSEMBLER ./src/interrupt.s -o ./build/interrupt.o
+$ASSEMBLER ./src/interrupt.s -o ./build/interrupt.o
 
 $COMPILER $COMPILER_PARAMS ./src/common.c -o ./build/common.o 
 $COMPILER $COMPILER_PARAMS ./src/string.c -o ./build/string.o 
