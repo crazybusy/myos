@@ -45,3 +45,5 @@ void terminal_putchar(char c);
 void terminal_write(const char* data, size_t size);
 void terminal_write_string(const char* data);
 void terminal_write_line(const char* data);
+
+void monitor_write_dec(uint8_t n);

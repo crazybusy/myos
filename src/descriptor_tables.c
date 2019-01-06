@@ -6,6 +6,7 @@
 //
 #include <descriptor_tables.h>
 #include <tty.h>
+#include <devices.h>
 
 // Lets us access our ASM functions from our C code.
 extern void gdt_flush(uint32_t value);
@@ -16,6 +17,8 @@ static void init_gdt();
 static void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran);
 static void init_idt();
 static void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags);
+static void irq_remap();
+static void init_irq();
 
 gdt_entry_t gdt_entries[5];
 gdt_ptr_t   gdt_ptr;
@@ -30,6 +33,8 @@ void init_descriptor_tables()
    init_gdt();
    terminal_write_line("Initialise the interrupt descriptor table.");
    init_idt();
+   terminal_write_line("Initialise the Interrupt Requests.");
+   init_irq();
 }
 
 static void init_gdt()
@@ -114,4 +119,69 @@ static void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags
     // We must uncomment the OR below when we get to using user-mode.
     // It sets the interrupt gate's privilege level to 3.
     idt_entries[num].flags   = flags /* | 0x60 */;
+}
+
+
+static void irq_remap(void)
+{
+    terminal_write_string("Getting the masks for PICs:");
+    monitor_write_dec(inportb(0x20));
+    terminal_write_string(":");
+    monitor_write_dec(inportb(0xA0));
+    terminal_write_string("\n");
+
+    terminal_write_string("Getting the data for PICs:");
+    monitor_write_dec(inportb(0x21));
+    terminal_write_string(":");
+    monitor_write_dec(inportb(0xA1));
+    terminal_write_string("\n");
+
+
+    /* send ICW1 */
+    outportb(0x20, 0x11);
+    outportb(0xA0, 0x11);
+
+    /* send ICW2 */
+    outportb(0x20 + 1, 0x20);   /* remap */
+    outportb(0xA0 + 1, 0x28);   /*  pics */
+
+    /* send ICW3 */
+    outportb(0x20 + 1, 4);  /* IRQ2 -> connection to slave */
+    outportb(0xA0 + 1, 2);
+
+    /* send ICW4 */
+    outportb(0x20 + 1, 0x01);
+    outportb(0xA0 + 1, 0x01);
+
+    /* disable all IRQs */
+    outportb(0x20 + 1, 0x0);
+
+}
+
+/* We first remap the interrupt controllers, and then we install
+*  the appropriate ISRs to the correct entries in the IDT. This
+*  is just like installing the exception handlers */
+static void init_irq()
+{
+    terminal_write_line("Remapping the PIC to use interrupt 32 to 47");
+    irq_remap();
+
+    terminal_write_line("Adding handlers for the IRQ routines");
+    idt_set_gate(32, (uint32_t)irq0, 0x08, 0x8E);
+    idt_set_gate(33, (uint32_t)irq1, 0x08, 0x8E);
+    idt_set_gate(34, (uint32_t)irq2, 0x08, 0x8E);
+    idt_set_gate(35, (uint32_t)irq3, 0x08, 0x8E);
+    idt_set_gate(36, (uint32_t)irq4, 0x08, 0x8E);
+    idt_set_gate(37, (uint32_t)irq5, 0x08, 0x8E);
+    idt_set_gate(38, (uint32_t)irq6, 0x08, 0x8E);
+    idt_set_gate(39, (uint32_t)irq7, 0x08, 0x8E);
+
+    idt_set_gate(40, (uint32_t)irq8, 0x08, 0x8E);
+    idt_set_gate(41, (uint32_t)irq9, 0x08, 0x8E);
+    idt_set_gate(42, (uint32_t)irq10, 0x08, 0x8E);
+    idt_set_gate(43, (uint32_t)irq11, 0x08, 0x8E);
+    idt_set_gate(44, (uint32_t)irq12, 0x08, 0x8E);
+    idt_set_gate(45, (uint32_t)irq13, 0x08, 0x8E);
+    idt_set_gate(46, (uint32_t)irq14, 0x08, 0x8E);
+    idt_set_gate(47, (uint32_t)irq15, 0x08, 0x8E);
 }

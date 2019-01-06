@@ -9,10 +9,6 @@
 ; perhaps setting up the GDT and segments. Please note that interrupts
 ; are disabled at this point: More on interrupts later!
 [BITS 32]
-global start
-start:
-    mov esp, _sys_stack     ; This points the stack to our new stack area
-    jmp stublet
 
 ; This part MUST be 4byte aligned, so we solve that issue using 'ALIGN 4'
 ALIGN 4
@@ -42,8 +38,14 @@ mboot:
 ; This is an endless loop here. Make a note of this: Later on, we
 ; will insert an 'extern _main', followed by 'call _main', right
 ; before the 'jmp $'.
-stublet:
+global start
+global _sys_stack
+global _sys_stack_bottom
+start:
+    mov esp, _sys_stack     ; This points the stack to our new stack area
+
     extern main
+    push ebx
     call main
     jmp $
 
@@ -61,8 +63,8 @@ gdt_flush:
     mov fs, ax
     mov gs, ax
     mov ss, ax
-    jmp 0x08:flush2
-flush2:
+    jmp 0x08:gdt_flush_end
+gdt_flush_end:
     ret
 
 ; Loads the IDT defined in '_idtp' into the processor.
@@ -326,7 +328,6 @@ isr31:
     push byte 31
     jmp isr_common_stub
 
-
 ; We call a C function in here. We need to let the assembler know
 ; that 'isr_handler' exists in another file
 extern isr_handler
@@ -336,29 +337,161 @@ extern isr_handler
 ; and finally restores the stack frame.
 isr_common_stub:
     pusha
-    push ds
-    mov ax, 0x10
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov eax, esp
-    push eax
-    mov eax, isr_handler
-    call eax
-    pop eax
-    pop ds
+
+    call isr_handler
+
     popa
     add esp, 8
     sti
     iret
 
+global irq0
+global irq1
+global irq2
+global irq3
+global irq4
+global irq5
+global irq6
+global irq7
+global irq8
+global irq9
+global irq10
+global irq11
+global irq12
+global irq13
+global irq14
+global irq15
+
+; 32: IRQ0
+irq0:
+    cli
+    push byte 0
+    push byte 32
+    jmp irq_common_stub
+
+; 33: IRQ1
+irq1:
+    cli
+    push byte 0
+    push byte 33
+    jmp irq_common_stub
+
+; 34: IRQ2
+irq2:
+    cli
+    push byte 0
+    push byte 34
+    jmp irq_common_stub
+
+; 35: IRQ3
+irq3:
+    cli
+    push byte 0
+    push byte 35
+    jmp irq_common_stub
+
+; 36: IRQ4
+irq4:
+    cli
+    push byte 0
+    push byte 36
+    jmp irq_common_stub
+
+; 37: IRQ5
+irq5:
+    cli
+    push byte 0
+    push byte 37
+    jmp irq_common_stub
+
+; 38: IRQ6
+irq6:
+    cli
+    push byte 0
+    push byte 38
+    jmp irq_common_stub
+
+; 39: IRQ7
+irq7:
+    cli
+    push byte 0
+    push byte 39
+    jmp irq_common_stub
+
+; 40: IRQ8
+irq8:
+    cli
+    push byte 0
+    push byte 40
+    jmp irq_common_stub
+
+; 41: IRQ9
+irq9:
+    cli
+    push byte 0
+    push byte 41
+    jmp irq_common_stub
+
+; 42: IRQ10
+irq10:
+    cli
+    push byte 0
+    push byte 42
+    jmp irq_common_stub
+
+; 43: IRQ11
+irq11:
+    cli
+    push byte 0
+    push byte 43
+    jmp irq_common_stub
+
+; 44: IRQ12
+irq12:
+    cli
+    push byte 0
+    push byte 44
+    jmp irq_common_stub
+
+; 45: IRQ13
+irq13:
+    cli
+    push byte 0
+    push byte 45
+    jmp irq_common_stub
+
+; 46: IRQ14
+irq14:
+    cli
+    push byte 0
+    push byte 46
+    jmp irq_common_stub
+
+; 47: IRQ15
+irq15:
+    cli
+    push byte 0
+    push byte 47
+    jmp irq_common_stub
+
+extern irq_handler
+
+irq_common_stub:
+    pusha
+
+    call irq_handler
+
+    popa
+    add esp, 8
+    sti
+    iret
 
 ; Here is the definition of our BSS section. Right now, we'll use
 ; it just to store the stack. Remember that a stack actually grows
 ; downwards, so we declare the size of the data before declaring
 ; the identifier '_sys_stack'
 SECTION .bss
+_sys_stack_bottom:
     resb 16384               ; This reserves 16KBytes of memory here
 _sys_stack:
 

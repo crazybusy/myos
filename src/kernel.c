@@ -19,9 +19,16 @@ int main(void *mboot_ptr)
 	init_descriptor_tables();	
 
 	terminal_write_line("Writing some interrupts");	
-
 	asm volatile("int $0x3");
 	asm volatile("int $0x4");
+
+	asm volatile("int $0x20");
+	terminal_write_line("Returned from IRQ");	
+	asm volatile("int $0x21");
+	asm volatile("int $0x22");
+	
+	terminal_write_line("Enabling hardware interrupts with sti");	
+	asm volatile("sti");
 
     return 0;
 }
