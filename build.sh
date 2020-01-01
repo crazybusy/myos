@@ -1,31 +1,36 @@
-rm -rf build
-rm -rf dist
-mkdir build
-mkdir dist 
 
+ARCH_FOLDER="./src/arch_x86"
+KERNEL_FOLDER="./src/common"
+BUILD_FOLDER="./build"
+DIST_FOLDER="./dist"
+
+rm -rf $BUILD_FOLDER
+rm -rf $DIST_FOLDER
+mkdir $BUILD_FOLDER
+mkdir $DIST_FOLDER 
 
 ASSEMBLER="nasm -f elf"
 COMPILER="i686-elf-gcc -c"
-LINKER="i686-elf-gcc -T ./src/linker.ld"
+LINKER="i686-elf-gcc"
 
-COMPILER_PARAMS="-std=gnu99 -ffreestanding -O2 -Wall -Wextra -I ./src/include"
+COMPILER_PARAMS="-std=gnu99 -ffreestanding -O2 -Wall -Wextra"
 LINKER_PARAMS="-ffreestanding -O2 -nostdlib"
 
+$ASSEMBLER $ARCH_FOLDER/boot.s -o $BUILD_FOLDER/boot.o
+$COMPILER $COMPILER_PARAMS -I $ARCH_FOLDER/include -I $KERNEL_FOLDER/include $ARCH_FOLDER/descriptor_tables.c -o $BUILD_FOLDER/descriptor_tables.o 
 
-$ASSEMBLER ./src/boot.s -o ./build/boot.o
+$ASSEMBLER $KERNEL_FOLDER/interrupts.s -o $BUILD_FOLDER/interrupts.o
+$COMPILER $COMPILER_PARAMS -I $ARCH_FOLDER/include -I $KERNEL_FOLDER/include $KERNEL_FOLDER/devices.c -o $BUILD_FOLDER/devices.o 
+$COMPILER $COMPILER_PARAMS -I $ARCH_FOLDER/include -I $KERNEL_FOLDER/include $KERNEL_FOLDER/string.c -o $BUILD_FOLDER/string.o 
+$COMPILER $COMPILER_PARAMS -I $ARCH_FOLDER/include -I $KERNEL_FOLDER/include $KERNEL_FOLDER/tty.c -o $BUILD_FOLDER/tty.o 
+$COMPILER $COMPILER_PARAMS -I $ARCH_FOLDER/include -I $KERNEL_FOLDER/include $KERNEL_FOLDER/kernel.c -o $BUILD_FOLDER/kernel.o 
+$COMPILER $COMPILER_PARAMS -I $ARCH_FOLDER/include -I $KERNEL_FOLDER/include $KERNEL_FOLDER/isr.c -o $BUILD_FOLDER/isr.o 
 
-$COMPILER $COMPILER_PARAMS ./src/devices.c -o ./build/devices.o 
-$COMPILER $COMPILER_PARAMS ./src/string.c -o ./build/string.o 
-$COMPILER $COMPILER_PARAMS ./src/tty.c -o ./build/tty.o 
-$COMPILER $COMPILER_PARAMS ./src/kernel.c -o ./build/kernel.o 
-$COMPILER $COMPILER_PARAMS ./src/descriptor_tables.c -o ./build/descriptor_tables.o 
-$COMPILER $COMPILER_PARAMS ./src/isr.c -o ./build/isr.o 
-
-OBJECTS="./build/*"
-$LINKER $LINKER_PARAMS -o ./dist/myos.bin $OBJECTS
+OBJECTS=$BUILD_FOLDER"/*"
+$LINKER $LINKER_PARAMS -T $KERNEL_FOLDER/linker.ld -o $DIST_FOLDER/myos.bin $OBJECTS
 
 mkdir -p isodir/boot/grub
-cp ./dist/myos.bin isodir/boot/myos.bin
+cp $DIST_FOLDER/myos.bin isodir/boot/myos.bin
 cp ./grub.cfg isodir/boot/grub/grub.cfg
-grub-mkrescue -o ./dist/myos.iso isodir
+grub-mkrescue -o $DIST_FOLDER/myos.iso isodir
 rm -rf isodir

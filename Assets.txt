@@ -10,6 +10,11 @@ _sys_stack_bottom
 _sys_stack
 
 All functions available in memory to the kernel via headers
+
+Location of GDT and IDT in memoryW
+
+Various things passed by grub in the multiboot header
+
 The IVT is located in the first 1024 bytes of physical memory, from addresses 0x0 through 0x3FF. Each entry inside of the IVT is 4 bytes, in the following format:
 Byte 0: Offset Low Address of the Interrupt Routine (IR)
 Byte 1: Offset High Address of the IR
