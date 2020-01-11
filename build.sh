@@ -1,6 +1,6 @@
 
-ARCH_FOLDER="./src/arch_x86"
-KERNEL_FOLDER="./src/common"
+ARCH_FOLDER="./src"
+KERNEL_FOLDER="./src"
 BUILD_FOLDER="./build"
 DIST_FOLDER="./dist"
 
