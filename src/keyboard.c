@@ -65,3 +65,9 @@ void init_keyboard(){
     register_interrupt_handler(33, &keyboard_interrupt);
 }
 
+char read_keys(){
+  if (buffer_loc != 0)
+    return keyboard_buffer[buffer_loc--];
+  else 
+    return NULL;
+}

@@ -14,8 +14,15 @@ uint32_t tick = 0;
 
 void start_shell(){
 	terminal_putchar('>');
-
-
+	
+	char input = read_keys();
+	while (input){
+	
+	if (input == '\n')
+		terminal_putchar('>');
+	
+	terminal_putchar(read_keys());
+}
 }
 
 void timer_callback(registers_t regs)
