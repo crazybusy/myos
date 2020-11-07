@@ -1,7 +1,7 @@
-open 192.168.2.100
+open 192.168.29.108
 ubuntu
 ubuntu
 cd myos
-get dist/myos.iso
+get dist/myos.iso 
 close
 bye
