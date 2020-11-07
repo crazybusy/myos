@@ -27,5 +27,5 @@ jobs:
           #sudo apt-get update  
           #sudo apt-get upgrade
           chmod +rwx ./build.sh
-          PATH=$PATH:~/home/runner/work/myos/myos/base_compiler/bin          
+          chmod +rwx ./base_compiler/bin/*
           ./build.sh
