@@ -24,8 +24,8 @@ jobs:
       - name: Run a multi-line script
         run: |          
           sudo apt-get install nasm
-          sudo apt-get update  
-          sudo apt-get upgrade
-          PATH=$PATH:~/home/runner/work/myos/myos/base_compiler/bin
+          #sudo apt-get update  
+          #sudo apt-get upgrade
           chmod +rwx ./build.sh
+          PATH=$PATH:~/home/runner/work/myos/myos/base_compiler/bin          
           ./build.sh
