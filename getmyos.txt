@@ -1,8 +1,6 @@
 open 192.168.29.108
-
 ubuntu
 ubuntu
-
 cd myos
 get dist/myos.iso 
 close
