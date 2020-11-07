@@ -22,6 +22,10 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
-        run: |
+        run: |          
+          sudo apt-get install nasm
+          sudo apt-get update  
+          sudo apt-get upgrade
+          PATH=$PATH:~/home/runner/work/myos/myos/base_compiler/bin
           chmod +rwx ./build.sh
           ./build.sh
