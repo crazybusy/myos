@@ -12,8 +12,8 @@ mkdir $BUILD_FOLDER
 mkdir $DIST_FOLDER 
 
 ASSEMBLER="nasm -f elf"
-COMPILER="./base_compiler/i686-elf-gcc -c"
-LINKER="./base_compiler/i686-elf-gcc"
+COMPILER="./base_compiler/bin/i686-elf-gcc -c"
+LINKER="./base_compiler/bin/i686-elf-gcc"
 
 COMPILER_PARAMS="-std=gnu99 -ffreestanding -O2 -Wall -Wextra"
 LINKER_PARAMS="-ffreestanding -O2 -nostdlib"
