@@ -13,16 +13,19 @@ extern void idt_flush(uint32_t value);
 uint32_t tick = 0;
 
 void start_shell(){
+	
 	terminal_putchar('>');
 	
 	char input = read_keys();
-	while (input){
-	
-	if (input == '\n')
-		terminal_putchar('>');
-	
-	terminal_putchar(read_keys());
-}
+	while (true){		
+	if(input != -1){		
+		if (input == '\n')
+			terminal_putchar('>');
+		else
+			terminal_putchar(input);		
+	}	
+	input = read_keys();
+	}
 }
 
 void timer_callback(registers_t regs)

@@ -43,8 +43,7 @@ unsigned char kbdus[128] =
     0,  /* All other keys are undefined */
 };
 
-int buffer_loc=0;
-
+int buffer_loc;
 
 void keyboard_interrupt(registers_t regs){
     unsigned char scancode = inportb(0x60);
@@ -56,18 +55,22 @@ void keyboard_interrupt(registers_t regs){
     else
     {   
         keyboard_buffer[buffer_loc++]=kbdus[scancode];
-        terminal_putchar(kbdus[scancode]);
+        //monitor_write_dec(buffer_loc);
+        //terminal_putchar(kbdus[scancode]);
     }
 }
 
 
 void init_keyboard(){
     register_interrupt_handler(33, &keyboard_interrupt);
+    buffer_loc=0;
 }
 
 char read_keys(){
-  if (buffer_loc != 0)
+
+  if (buffer_loc != 0){
+    terminal_putchar(keyboard_buffer[buffer_loc]);
     return keyboard_buffer[buffer_loc--];
-  else 
-    return NULL;
+  }else 
+    return -1;
 }

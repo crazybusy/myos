@@ -1,13 +1,9 @@
 #include <devices.h>
+#include <string.h>
 #include <isr.h>
 #include <tty.h>
 
-void* memset(void* bufptr, int value, size_t size) {
-	unsigned char* buf = (unsigned char*) bufptr;
-	for (size_t i = 0; i < size; i++)
-		buf[i] = (unsigned char) value;
-	return bufptr;
-}
+
 uint8_t inportb (uint16_t _port)
 {
    uint8_t ret;

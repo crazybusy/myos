@@ -12,7 +12,6 @@
 // uint8_t inb(uint16_t port);
 // uint16_t inw(uint16_t port);
 
-void* memset(void* bufptr, int value, size_t size);
 
 uint8_t inportb (uint16_t _port);
 void outportb (uint16_t _port, uint8_t _data);
