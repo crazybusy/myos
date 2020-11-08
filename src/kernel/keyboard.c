@@ -69,8 +69,8 @@ void init_keyboard(){
 char read_keys(){
 
   if (buffer_loc != 0){
-    terminal_putchar(keyboard_buffer[buffer_loc]);
-    return keyboard_buffer[buffer_loc--];
+    //terminal_putchar(keyboard_buffer[buffer_loc]);
+    return keyboard_buffer[--buffer_loc];
   }else 
     return -1;
 }
