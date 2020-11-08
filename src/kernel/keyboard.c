@@ -50,13 +50,12 @@ void keyboard_interrupt(registers_t regs){
     if (scancode & 0x80)
     {
         /* You can use this one to see if the user released the
+        TODO Implement modifer keys
         *  shift, alt, or control keys... */
     }
     else
     {   
         keyboard_buffer[buffer_loc++]=kbdus[scancode];
-        //monitor_write_dec(buffer_loc);
-        //terminal_putchar(kbdus[scancode]);
     }
 }
 
@@ -68,9 +67,8 @@ void init_keyboard(){
 
 char read_keys(){
 
-  if (buffer_loc != 0){
-    //terminal_putchar(keyboard_buffer[buffer_loc]);
+  if (buffer_loc != 0)    
     return keyboard_buffer[--buffer_loc];
-  }else 
+  else 
     return -1;
 }
