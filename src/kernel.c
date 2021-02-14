@@ -29,8 +29,7 @@ void start_shell(){
 
 
 
-//int main(void *mboot_ptr) 
-int main() 
+int main(void *mboot_ptr) 
 {
 	/* Initialize terminal interface */
 	terminal_initialize();
