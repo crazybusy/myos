@@ -13,7 +13,7 @@ extern void idt_flush(uint32_t value);
 
 
 void start_shell(){
-	
+//TODO Position the cursor
 	terminal_putchar('>');
 	
 	char input = read_keys();
@@ -29,7 +29,7 @@ void start_shell(){
 
 
 
-int main(void *mboot_ptr) 
+int main() 
 {
 	/* Initialize terminal interface */
 	terminal_initialize();
