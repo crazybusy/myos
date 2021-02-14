@@ -4,7 +4,7 @@
 *  though I set it's array index to 0. You can change that to
 *  whatever you want using a macro, if you wish! */
 
-void keyboard_interrupt(registers_t regs);
+void keyboard_interrupt();
 char read_keys();
 void init_keyboard();
 unsigned char keyboard_buffer[1024];

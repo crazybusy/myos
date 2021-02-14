@@ -45,7 +45,7 @@ unsigned char kbdus[128] =
 
 int buffer_loc;
 
-void keyboard_interrupt(registers_t regs){
+void keyboard_interrupt(){
     unsigned char scancode = inportb(0x60);
     if (scancode & 0x80)
     {

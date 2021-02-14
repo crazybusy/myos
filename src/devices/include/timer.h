@@ -4,5 +4,5 @@
 #include <isr.h>
 
 
-void timer_callback(registers_t regs);
+void timer_callback();
 void init_timer(uint32_t frequency);

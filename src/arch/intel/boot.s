@@ -45,7 +45,7 @@ start:
     mov esp, _sys_stack     ; This points the stack to our new stack area
 
     extern main
-    push ebx
+;    push ebx
     call main
     jmp $
 

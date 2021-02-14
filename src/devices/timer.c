@@ -3,7 +3,7 @@
 
 uint32_t tick = 0;
 
-void timer_callback(registers_t regs)
+void timer_callback()
 {
    tick++;   
    //terminal_write_line((char *)keyboard_buffer);
